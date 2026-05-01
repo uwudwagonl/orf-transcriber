@@ -37,8 +37,6 @@
     <Icon Id="AppIcon.exe" SourceFile="!(bindpath.dist)\OrfTranscriber\OrfTranscriber.exe" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon.exe" />
     <Property Id="ARPHELPLINK" Value="https://github.com/badlogic/orfondl" />
-    <Property Id="ARPNOMODIFY" Value="1" />
-    <Property Id="ARPNOREPAIR" Value="1" />
 
     <ui:WixUI Id="WixUI_InstallDir" />
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
