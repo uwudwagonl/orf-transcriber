@@ -45,7 +45,7 @@ block_cipher = None
 
 
 a = Analysis(
-    [str(PROJECT_ROOT / "src" / "orf_transcriber" / "__main__.py")],
+    [str(PROJECT_ROOT / "build" / "launcher.py")],
     pathex=[str(PROJECT_ROOT / "src")],
     binaries=binaries,
     datas=datas,
