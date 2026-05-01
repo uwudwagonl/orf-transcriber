@@ -4,8 +4,6 @@ Eine kleine Windows-Anwendung, die ein Video von **ORF ON** (`on.orf.at`)
 herunterlädt und automatisch ein **Word-Transkript** mit Zeitmarken
 erstellt — barrierearm bedienbar, lokal, ohne Cloud.
 
-> Für Mama gemacht: Link einfügen → ein Klick → Word-Datei.
-
 ## Was es kann
 
 - Video von `on.orf.at` per [orfondl](https://github.com/badlogic/orfondl)
