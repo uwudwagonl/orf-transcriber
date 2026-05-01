@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install runtime deps
+        run: pip install -r requirements.txt
+      - name: Import-only smoke test
+        env:
+          PYTHONPATH: src
+          DISPLAY: ":99"
+        run: |
+          python -c "import orf_transcriber.config, orf_transcriber.metadata, orf_transcriber.docx_writer, orf_transcriber.paths"

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  WiX 5 installer for ORF Transcriber.
+
+  Build (after PyInstaller has produced build/dist/OrfTranscriber/):
+    wix build build/installer/Package.wxs `
+        -arch x64 `
+        -ext WixToolset.UI.wixext `
+        -bindpath dist=build/dist `
+        -d Version=0.1.0 `
+        -out build/dist/OrfTranscriber-0.1.0.msi
+
+  Per-machine install to Program Files. UpgradeCode is fixed so future
+  installers replace this one cleanly — do not regenerate it.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package
+      Name="ORF Transcriber"
+      Manufacturer="ORF Transcriber"
+      Version="$(var.Version)"
+      UpgradeCode="4F9C3E7B-2A8D-4E6F-9B1C-7D8E5A3F2C1B"
+      Scope="perMachine"
+      Compressed="yes"
+      InstallerVersion="500">
+
+    <SummaryInformation Description="ORF ON Videos herunterladen und transkribieren" />
+
+    <MajorUpgrade
+        DowngradeErrorMessage="Eine neuere Version von [ProductName] ist bereits installiert." />
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Add/Remove Programs metadata. The icon points to the bundle's exe so
+         Windows extracts the embedded icon resource — no separate .ico needed. -->
+    <Icon Id="AppIcon.exe" SourceFile="!(bindpath.dist)\OrfTranscriber\OrfTranscriber.exe" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon.exe" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/badlogic/orfondl" />
+    <Property Id="ARPNOMODIFY" Value="1" />
+    <Property Id="ARPNOREPAIR" Value="1" />
+
+    <ui:WixUI Id="WixUI_InstallDir" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <WixVariable Id="WixUILicenseRtf" Value="$(env.WIX_LICENSE_RTF)" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="ORF Transcriber" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="ORF Transcriber" />
+    </StandardDirectory>
+
+    <Feature Id="MainApplication" Title="ORF Transcriber" Level="1">
+      <!-- Harvest the entire PyInstaller dist folder. WiX auto-creates a
+           component per file and preserves subdirectory structure relative
+           to the matched root. -->
+      <Files Directory="INSTALLFOLDER"
+             Include="!(bindpath.dist)\OrfTranscriber\**" />
+
+      <!-- Start menu shortcut. Target uses a path expression resolved at
+           install time, so we don't need to know the harvested File Id. -->
+      <Component Id="StartMenuShortcut" Directory="ApplicationProgramsFolder" Guid="A2C5E1B0-7D9F-4E3C-8A2B-9C6D5E4F3A21">
+        <Shortcut Id="OrfTranscriberShortcut"
+                  Name="ORF Transcriber"
+                  Description="ORF ON Videos herunterladen und transkribieren"
+                  Target="[INSTALLFOLDER]OrfTranscriber.exe"
+                  WorkingDirectory="INSTALLFOLDER" />
+        <RemoveFolder Id="RemoveProgramsFolder" On="uninstall" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\OrfTranscriber"
+                       Name="installed"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+    </Feature>
+
+  </Package>
+</Wix>
